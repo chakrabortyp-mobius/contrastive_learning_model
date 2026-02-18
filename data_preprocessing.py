@@ -90,7 +90,24 @@ class MarketDataPreprocessor:
         
         print(f"  - Filled data shape: {df_filled.shape}")
         
-        # Step 2: Fit scaler on a sample (to avoid memory issues)
+        # # Step 2: Fit scaler on a sample (to avoid memory issues)
+        # print("  - Fitting scaler on sample...")
+        # sample_size = min(10000, len(df_filled))
+        # Step 2: Clean infinity and extreme values
+        print("  - Cleaning infinity and extreme values...")
+
+        # Replace inf with NaN
+        df_filled = df_filled.replace([np.inf, -np.inf], np.nan)
+
+        # Fill any remaining NaN with 0 (fallback)
+        df_filled = df_filled.fillna(0)
+
+        # Clip extreme values to prevent overflow
+        df_filled = df_filled.clip(lower=-1e10, upper=1e10)
+
+        print(f"  - Cleaned data shape: {df_filled.shape}")
+
+        # Step 3: Fit scaler on a sample (to avoid memory issues)
         print("  - Fitting scaler on sample...")
         sample_size = min(10000, len(df_filled))
         sample_indices = np.random.choice(len(df_filled), sample_size, replace=False)
