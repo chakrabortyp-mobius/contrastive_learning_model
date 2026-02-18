@@ -9,7 +9,7 @@ class MoCoConfig:
     
     def __init__(self):
         # ==================== DATA CONFIGURATION ====================
-        self.data_path = "/home/gaian/Desktop/contrastive_learning_model/tensor_values.parquet"
+        self.data_path = "tensor_values.parquet"
         self.train_split = 0.9  # 90% train, 10% val (configurable)
         self.random_seed = 42
         

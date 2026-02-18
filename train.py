@@ -24,7 +24,7 @@ def parse_args():
     
     # Data arguments
     parser.add_argument('--data_path', type=str, 
-                       default='/home/gaian/Desktop/contrastive_learning_model/tensor_values.parquet',
+                       default='tensor_values.parquet',
                        help='Path to parquet data file')
     parser.add_argument('--train_split', type=float, default=0.9,
                        help='Train/val split ratio (use 1.0 for no validation)')
