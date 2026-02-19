@@ -85,12 +85,13 @@ class MoCoTrainer:
             lr: Learning rate for this epoch
         """
         if epoch < self.config.warmup_epochs:
-            # Linear warmup
-            return (epoch / self.config.warmup_epochs) * self.config.learning_rate
+            # Linear warmup (start from 10% of max, not zero)
+            warmup_factor = 0.1 + 0.9 * (epoch / self.config.warmup_epochs)
+            return self.config.learning_rate * warmup_factor
         else:
             # Cosine annealing
             progress = (epoch - self.config.warmup_epochs) / \
-                      (self.config.num_epochs - self.config.warmup_epochs)
+                    (self.config.num_epochs - self.config.warmup_epochs)
             return self.config.learning_rate * 0.5 * (1 + np.cos(np.pi * progress))
     
     def train_epoch(self, epoch):

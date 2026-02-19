@@ -219,10 +219,13 @@ class MoCo(nn.Module):
             param_k.data = param_k.data * self.momentum + \
                           param_q.data * (1.0 - self.momentum)
     
+    
+    
     @torch.no_grad()
     def _dequeue_and_enqueue(self, keys):
         """
         Update queue: add new keys, remove oldest
+        Handles variable batch sizes (for last batch)
         
         Args:
             keys: [batch_size, projection_dim] tensor of key projections
@@ -231,12 +234,15 @@ class MoCo(nn.Module):
         
         ptr = int(self.queue_ptr)
         
-        # Check if queue is large enough
-        assert self.queue_size % batch_size == 0, \
-            f"Queue size {self.queue_size} should be divisible by batch size {batch_size}"
-        
-        # Replace oldest entries in queue
-        self.queue[:, ptr:ptr + batch_size] = keys.T
+        # Replace oldest entries in queue (handle wraparound)
+        if ptr + batch_size <= self.queue_size:
+            # Normal case: no wraparound needed
+            self.queue[:, ptr:ptr + batch_size] = keys.T
+        else:
+            # Wraparound case: batch spans end of queue
+            remaining = self.queue_size - ptr
+            self.queue[:, ptr:] = keys[:remaining].T
+            self.queue[:, :batch_size - remaining] = keys[remaining:].T
         
         # Move pointer
         ptr = (ptr + batch_size) % self.queue_size
