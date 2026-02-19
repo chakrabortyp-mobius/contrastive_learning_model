@@ -1,3 +1,6 @@
 # tensor_values.parquet
 .venv/
 test_modules.py
+checkpoints/
+logs/
+outputs/
