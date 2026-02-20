@@ -71,13 +71,13 @@ def parse_args():
     
     # Output arguments
     parser.add_argument('--output_dir', type=str, 
-                       default='/home/claude/moco_market/outputs',
+                       default='./outputs',
                        help='Output directory')
     parser.add_argument('--checkpoint_dir', type=str,
-                       default='/home/claude/moco_market/checkpoints',
+                       default='./checkpoints',
                        help='Checkpoint directory')
     parser.add_argument('--log_dir', type=str,
-                       default='/home/claude/moco_market/logs',
+                       default='./logs',
                        help='Log directory')
     
     # Misc
